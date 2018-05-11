@@ -9,3 +9,41 @@
 
 // Any additional imported files //
 @import "theme/child_theme";  // <--------- Add your styles into this file
+
+.card {
+    min-width: 250px;
+    .card-body {
+        .label, .value {
+            font-size: 1.1rem;
+            font-size: 1.1em;
+            font-size: 11px;
+        }
+        .label {
+            font-weight: bold;            
+        }
+        .value {
+            float: right;
+            line-height: 29px;
+        }
+    }
+}
+
+.page-template-top-bands {
+    .jumbotron {
+        margin-bottom: 15px;
+        cite {float: right;}
+    }
+    @include media-breakpoint-up(sm) {
+        .card-columns {
+            -webkit-column-count: 2;
+            column-count: 2;
+        }
+    }
+    @include media-breakpoint-up(lg) {
+        .card-columns {
+            -webkit-column-count: 3;
+            column-count: 3;
+        }
+    }
+}
+
