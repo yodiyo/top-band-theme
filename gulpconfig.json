@@ -1,6 +1,6 @@
 {
   "browserSyncOptions" : {
-    "proxy": "localhost/wordpress/",
+    "proxy": "www.theyoricktouch.dev.cc",
     "notify": false
   },
   "browserSyncWatchFiles" : [
