@@ -12,6 +12,13 @@
 
 .card {
     min-width: 250px;
+    img {
+        object-fit: scale-down;
+        height: 200px;
+    }
+    .card-header {
+        margin-bottom: 5px;
+    }
     .card-body {
         .label, .value {
             font-size: 1.1rem;

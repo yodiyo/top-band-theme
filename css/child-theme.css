@@ -10774,6 +10774,12 @@ a.skip-link {
 
 .card {
   min-width: 250px; }
+  .card img {
+    -o-object-fit: scale-down;
+       object-fit: scale-down;
+    height: 200px; }
+  .card .card-header {
+    margin-bottom: 5px; }
   .card .card-body .label, .card .card-body .value {
     font-size: 1.1rem;
     font-size: 1.1em;
