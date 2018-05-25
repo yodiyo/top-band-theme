@@ -7,7 +7,40 @@
 
 ?>
 	<div class="card" id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
-		<h5 class="card-header"><?php $value = the_field( "artist_name" ); ?></h5>
+		<?php
+			$url = "http://api.songkick.com/api/3.0/search/artists.json?apikey=gcRqmcFu6yhD6dus";
+			$query =  "&query=";
+			$artist = get_field( "artist_name" );
+			$apiPath = $url . $query . $artist;
+			$response = wp_remote_get($apiPath);
+			if (is_wp_error($response) || !isset($response['body'])) return; // bad response
+			// the good stuff
+			$body = wp_remote_retrieve_body($response);
+			// decode the data
+			$data = json_decode($body, true);
+
+			// fetch artist id
+			$artistId = $data["resultsPage"]["results"]["artist"][0]["id"];
+			// artist on songkick
+			$artistSongkick = $data["resultsPage"]["results"]["artist"][0]["uri"];
+			
+			// get artist gig data
+			$gigData = "http://api.songkick.com/api/3.0/artists/" . $artistId . "/gigography.json?apikey=gcRqmcFu6yhD6dus";
+			$gigDataResponse = wp_remote_get($gigData);
+			if (is_wp_error($gigDataResponse) || !isset($gigDataResponse['body'])) return; // bad response
+			// the good stuff
+			$gigDataBody = wp_remote_retrieve_body($gigDataResponse);
+			$gigDataData = json_decode($gigDataBody, true);
+			// number of gigs
+			$numberEntries = $gigDataData["resultsPage"]["totalEntries"];
+			// first gig - venue
+			$first = $gigDataData["resultsPage"]["results"]["event"][0];
+			$firstGig = $first["start"]["date"];
+			$firstVenue = $first["venue"]["displayName"];
+			$firstCity = $first["venue"]["metroArea"]["displayName"];
+		?>
+		
+		<h5 class="card-header"><?php echo $artist; ?></h5>
 		
 		<!-- use featured image for thumbnail -->
 		<?php 
@@ -17,17 +50,17 @@
 		?>
 		<?php 
 			if (has_post_thumbnail()){
-			echo ('<img class="card-img-top" src="' . $thumb_url . '" alt="Card image cap">');
-			}
+				echo ('<img class="card-img-top" src="' . $thumb_url . '" alt="' . $artist . '">');
+			};
 		?>
 
-		<div class="card-body">                               
-			<p><span class="label">Number of gigs: </span><span class="value"><?php $value = the_field( "number_of_entries" ); ?></span></p>
-			<p><span class="label">First gig date: </span><span class="value"><?php $value = the_field( "first_gig" ); ?></span></p>                               
-			<p><span class="label">First venue: </span><span class="value"><?php $value = the_field( "first_venue" ); ?></span></p>
-			<p><span class="label">ID: </span><span class="value"><?php $value = the_field( "artist_id" ); ?></span></p>
+		<div class="card-body">
+			<p><span class="label">Number of gigs: </span><span class="value"><?php echo $numberEntries; ?></span></p>
+			<p><span class="label">First gig date: </span><span class="value"><?php echo date("jS F, Y", strtotime($firstGig)); ?></span></p>                               
+			<p><span class="label">First venue: </span><span class="value"><?php echo $firstVenue . ", " . $firstCity; ?></span></p>
+			<p><span class="label">ID: </span><span class="value"><?php echo $artistId; ?></span></p>
 			<div class="text-center">
-				<a href="<?php $value = the_field( "songkick_api_url" ); ?>" class="btn btn-outline-primary">Songkick API</a>
+				<a href="<?php echo $artistSongkick; ?>" class="btn btn-outline-primary"><?php echo $artist; ?> on Songkick</a>
 			</div>
 		</div>
 	</div>
