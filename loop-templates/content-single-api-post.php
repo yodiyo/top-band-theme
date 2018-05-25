@@ -38,16 +38,6 @@
 			$firstGig = $first["start"]["date"];
 			$firstVenue = $first["venue"]["displayName"];
 			$firstCity = $first["venue"]["metroArea"]["displayName"];
-
-			//get image from Skiddle
-			$artistSearch = "https://www.skiddle.com/api/v1/artists/?name=" . $artist . "&api_key=e2e207702b2025c607f8eceff533f1e0";
-			$artistSearchResponse = wp_remote_get($artistSearch);
-			if (is_wp_error($artistSearchResponse) || !isset($artistSearchResponse['body'])) return; // bad response
-			// the good stuff
-			$artistSearchBody = wp_remote_retrieve_body($artistSearchResponse);
-			$artistSearchData = json_decode($artistSearchBody, true);
-			// get artist image
-			$artistImg = $artistSearchData["results"][0]["imageurl"];
 		?>
 		
 		<h5 class="card-header"><?php echo $artist; ?></h5>
@@ -61,8 +51,6 @@
 		<?php 
 			if (has_post_thumbnail()){
 				echo ('<img class="card-img-top" src="' . $thumb_url . '" alt="' . $artist . '">');
-			} elseif ($artistImg){
-				echo ('<img class="card-img-top" src="' . $artistImg . '" alt="' . $artist . '">');
 			};
 		?>
 
