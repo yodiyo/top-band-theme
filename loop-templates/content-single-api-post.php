@@ -8,7 +8,7 @@
 ?>
 	<div class="card" id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
 		<?php
-			$url = "http://api.songkick.com/api/3.0/search/artists.json?apikey=gcRqmcFu6yhD6dus";
+			$url = "http://api.songkick.com/api/3.0/search/artists.json?apikey=[YOUR SONGKICK API KEY]";
 			$query =  "&query=";
 			$artist = get_field( "artist_name" );
 			$apiPath = $url . $query . $artist;
@@ -26,7 +26,7 @@
 			$artistSongkick = get_field( "songkick_api_url" ) ? get_field( "songkick_api_url" ) : $data["resultsPage"]["results"]["artist"][0]["uri"];
 			
 			// get artist gig data
-			$gigData = "http://api.songkick.com/api/3.0/artists/" . $artistId . "/gigography.json?apikey=gcRqmcFu6yhD6dus";
+			$gigData = "http://api.songkick.com/api/3.0/artists/" . $artistId . "/gigography.json?apikey=[YOUR SONGKICK API KEY]";
 			$gigDataResponse = wp_remote_get($gigData);
 			if (is_wp_error($gigDataResponse) || !isset($gigDataResponse['body'])) return; // bad response
 			// the good stuff
@@ -45,7 +45,7 @@
 			$firstVenue = get_field( "first_venue" ) ? get_field( "first_venue" ) : $first["venue"]["displayName"] . ", " .  $firstCity;
 			
 			//get image from Skiddle
-			$artistSearch = "https://www.skiddle.com/api/v1/artists/?name=" . $artist . "&api_key=e2e207702b2025c607f8eceff533f1e0";
+			$artistSearch = "https://www.skiddle.com/api/v1/artists/?name=" . $artist . "&api_key=[YOUR SKIDDLE API KEY]";
 			$artistSearchResponse = wp_remote_get($artistSearch);
 			if (is_wp_error($artistSearchResponse) || !isset($artistSearchResponse['body'])) return; // bad response
 			// the good stuff
