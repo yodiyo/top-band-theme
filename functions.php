@@ -28,3 +28,39 @@ function add_child_theme_textdomain() {
     load_child_theme_textdomain( 'understrap-child', get_stylesheet_directory() . '/languages' );
 }
 add_action( 'after_setup_theme', 'add_child_theme_textdomain' );
+
+add_filter( 'wp_trim_excerpt', 'understrap_all_excerpts_get_more_link');
+
+if ( ! function_exists( 'understrap_all_excerpts_get_more_link' ) ) {
+	/**
+	 * Adds a custom read more link to all excerpts, manually or automatically generated
+	 *
+	 * @param string $post_excerpt Posts's excerpt.
+	 *
+	 * @return string
+	 */
+	function understrap_all_excerpts_get_more_link( $post_excerpt ) {
+
+		return $post_excerpt . ' [...]<p><a class="btn btn-secondary understrap-read-more-link" href="' . "posts#". ( get_the_ID() ) . '">' . __( 'Read More...',
+		'understrap' ) . '</a></p>';
+	}
+}
+
+add_action('rest_api_init', 'register_rest_images', 15);
+function register_rest_images(){
+    register_rest_field( array('post'),
+        'fimg_url',
+        array(
+            'get_callback'    => 'get_rest_featured_image',
+            'update_callback' => null,
+            'schema'          => null,
+        )
+    );
+}
+function get_rest_featured_image( $object, $field_name, $request ) {
+    if( $object['featured_media'] ){
+        $img = wp_get_attachment_image_src( $object['featured_media'], 'app-thumb' );
+        return $img[0];
+    }
+    return false;
+}
